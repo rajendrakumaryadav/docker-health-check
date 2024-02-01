@@ -1,0 +1,38 @@
+version: '3.7'
+networks:
+  webnet:
+    name: webnet
+    driver: bridge
+
+services:
+  webserver:
+    container_name: webserver
+    hostname: webserver
+    image: rajendrayadav/webserver:latest
+    environment:
+      - GRPCHOST=grpcserver
+    ports:
+      - "5001:5000"
+    networks:
+      - webnet
+    # Run some commands before after run the platform
+#    command: bash -c "apt update && apt install -y curl && python3 /app/app.py"
+    healthcheck:
+      test: curl --fail http://webserver:5000 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  grpcserver:
+    container_name: grpcserver
+    hostname: grpcserver
+    image: rajendrayadav/grpcserver:latest
+    environment:
+      - HOSTNAME=grpcserver
+    networks:
+      - webnet
+    healthcheck:
+      test: telnet http://localhost:50051 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Microservice Status::Platform</title>
+    <meta http-equiv="refresh" content="3">
+</head>
+<body>
+<!--{{ status_data }}-->
+
+<h1>Microservice Status::Platform</h1>
+<!--Show service name with green and red button if status is health and unhealthy-->
+{% if status_data.items()|length == 0 %}
+<p>No running service found!</p>
+{% else %}
+<h2>Services</h2>
+{% for key, val in status_data.items() %}
+<p>{{key}}: {% if val.Status == 'healthy' %}
+    <button style="background-color: green">{{val.Status}}</button>
+    {% else %}
+    <button style="background-color: red">{{val.Status}}</button>
+    {% endif %}
+</p>
+{% endfor %}
+
+{% endif %}
+</body>
+</html>
